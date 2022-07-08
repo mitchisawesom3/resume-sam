@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      sam-deploy-output: ${{ steps.samdeploy.outputs.samdeploy }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -28,7 +30,8 @@ jobs:
 
 # sam deploy
       - run: sudo apt-get install -y gawk
-      - run: echo "OUTPUT=$(sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} --parameter-overrides BucketName=${{ secrets.SITE_BUCKET }})" | tee -a $GITHUB_ENV
+      - id: sam-deploy
+      - run: echo "::set-output name=samdeploy::$(sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} --parameter-overrides BucketName=${{ secrets.SITE_BUCKET }})"
       - run: echo "API_URL=$(echo $OUTPUT | awk '/Value/{print $2}')" >> $GITHUB_ENV
       - run: curl $API_URL
 
