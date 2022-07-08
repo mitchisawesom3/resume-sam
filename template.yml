@@ -97,7 +97,7 @@ Resources:
           - 'www.mitchbounds.com'
         Origins:
           - DomainName: !Sub 
-              - 'mitchb-new.s3.${AWS::Region}.amazonaws.com'
+              - '${BucketName}.s3.${AWS::Region}.amazonaws.com'
               - Bucket: !Ref BucketName
             Id: S3-private-bucket
             S3OriginConfig:
