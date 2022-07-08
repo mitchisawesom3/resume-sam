@@ -12,7 +12,17 @@ Resources:
       Handler: get-count.handler
       Runtime: nodejs16.x
       Timeout: 15
-      Policies: AmazonDynamoDBReadOnlyAccess
+      Policies: 
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            Resource: !GetAtt tracking.Arn
+#        - PolicyName: DynamoDBUpdateAccess
+#          PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "dynamodb:PutItem","dynamodb:GetItem","dynamodb:UpdateItem" ], "Resource": "${tracking.Arn}" } ] }'
       Events:
         GetCountApi:
           Type: Api
@@ -29,7 +39,15 @@ Resources:
       Handler: add-visit.lambda_handler
       Runtime: python3.9
       Timeout: 15
-      Policies: AWSLambdaDynamoDBExecutionRole
+      Policies:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            Resource: !GetAtt tracking.Arn 
       Events:
         AddVisitApi:
           Type: Api
@@ -57,7 +75,8 @@ Resources:
     Properties:
       Name: Visitor Count API
       StageName: dev
-      Cors: "'https://www.mitchbounds.com'"
+      Cors: 
+        AllowOrigin: "'https://www.mitchbounds.com'"
 # Create S3 Bucket for site files
   MitchB:
     Type: AWS::S3::Bucket
