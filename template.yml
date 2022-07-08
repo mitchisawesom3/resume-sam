@@ -96,7 +96,9 @@ Resources:
         Aliases:
           - 'www.mitchbounds.com'
         Origins:
-          - DomainName: !Sub '{BucketName}.s3.${AWS::Region}.amazonaws.com'
+          - DomainName: !Sub 
+              - '{Bucket}.s3.${AWS::Region}.amazonaws.com'
+              - Bucket: !Ref BucketName
             Id: S3-private-bucket
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginIdentity}'
