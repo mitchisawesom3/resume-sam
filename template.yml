@@ -145,13 +145,13 @@ Resources:
 Outputs:
   visitorCountAPI:
     Description: API Gateway endpoint for dev stage
-    Value: !Sub 'https://${visitorCountAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/'
-  visitorCountApiId:
-    Description: 'API Gateway ARN for Visitor Count API'
-    Value: !Ref visitorCountAPI
-    Export:
-      Name: visitorCountApi-RestApiId
-  visitorCountAPIRootResourceId:
-    Value: !GetAtt visitorCountAPI.RootResourceId
-    Export:
-      Name: visitorCountApi-RootResourceId
+    Value: !Sub 'https://${visitorCountAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/get-count'
+#  visitorCountApiId:
+#    Description: 'API Gateway ARN for Visitor Count API'
+#    Value: !Ref visitorCountAPI
+#    Export:
+#      Name: visitorCountApi-RestApiId
+#  visitorCountAPIRootResourceId:
+#    Value: !GetAtt visitorCountAPI.RootResourceId
+#    Export:
+#      Name: visitorCountApi-RootResourceId

@@ -17,10 +17,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - run: sam build --use-container
+      - run: sam build 
 
 # Run Unit tests
 
 # sam deploy
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }}
-#
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} 2>&1 | awk '/Value/'{print $2}'
