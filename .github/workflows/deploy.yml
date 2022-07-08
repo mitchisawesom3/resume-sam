@@ -36,7 +36,7 @@ jobs:
       - name: Install gawk to help get variables easier
         run: sudo apt-get install -y gawk
       - name: Deploy sam template
-        run: echo "OUTPUT=$(sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} --parameter-overrides BucketName=${{ secrets.SITE_BUCKET }})" >> $GITHUB_ENV; echo "${{ env.OUTPUT }}"
+        run: echo "OUTPUT=\"$(sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} --parameter-overrides BucketName=${{ secrets.SITE_BUCKET }})\"" >> $GITHUB_ENV; echo "${{ env.OUTPUT }}"
       - name: Store API URL in variable for testing
         run: echo "API_URL=$(echo $OUTPUT | awk '/Value/{print $2}')" >> $GITHUB_ENV
       - name: Run curl on API URL
