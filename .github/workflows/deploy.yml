@@ -9,31 +9,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-#      - name: Create Secrets
-#        if: ${{ env.SECRETS_CHECK }}
-#        uses: fjogeleit/http-request-action@v1
-#        with:
-#          url: 'https://api.github.com/repos/mitchisawesom3/resume-sam/actions/secrets/AWS_KEY_ID
+      - name: Checkout, build, and deploy
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+      - uses: aws-actions/setup-sam@v1
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - run: sam build --use-container
 
-      - name: Checkout
-        uses: actions/checkout@v3
+# Run Unit tests
+
+# sam deploy
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }}
 #
-#      - name: Deploy
-#        uses: jakejarvis/s3-sync-action@master
-#        with:
-#          args: --delete --exclude '.git/*' --exclude '.github/*'
-#        env:
-#          AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET }}
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          AWS_REGION: ${{ secrets.AWS_REGION }}
-#          SOURCE_DIR: './public'
-#
-#      - name: Invalidate CloudFront
-#        uses: chetan/invalidate-cloudfront-action@v2
-#        env:
-#          DISTRIBUTION: ${{ secrets.CF_DISTRIBUTION }}
-#          PATHS: "/*"
-#          AWS_REGION: ${{ secrets.AWS_REGION }}
-#          AWS_ACCESS_KEY_ID: ${{ secrets.CF_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.CF_SECRET_ACCESS_KEY }}

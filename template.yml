@@ -12,15 +12,7 @@ Resources:
       Handler: get-count.handler
       Runtime: nodejs16.x
       Timeout: 15
-      Policies: 
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Action:
-            - dynamodb:PutItem
-            - dynamodb:GetItem
-            - dynamodb:UpdateItem
-            Resource: !GetAtt tracking.Arn
+      Policies: AmazonDynamoDBReadOnlyAccess 
       Events:
         GetCountApi:
           Type: Api
