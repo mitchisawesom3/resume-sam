@@ -1,7 +1,10 @@
 AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: A SAM template for deploying Mitch's resume website infrastructure.
-
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name of bucket to create
 Resources:
 # Create the get-count Lambda function
   getcount:
@@ -11,7 +14,7 @@ Resources:
       CodeUri: get-count/
       Handler: get-count.handler
       Runtime: nodejs16.x
-      Timeout: 15
+      Timeout: 5
       Policies: AmazonDynamoDBReadOnlyAccess 
       Events:
         GetCountApi:
@@ -28,7 +31,7 @@ Resources:
       CodeUri: add-visit/
       Handler: add-visit.lambda_handler
       Runtime: python3.9
-      Timeout: 15
+      Timeout: 5
       Policies:
         Version: "2012-10-17"
         Statement:
@@ -72,7 +75,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: Private
-      BucketName: mitchb-new
+      BucketName: !Ref BucketName
 # Create CloudFront Origin Identity for use in granting CloudFront access to S3
   CloudFrontOriginIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
@@ -83,7 +86,7 @@ Resources:
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: mitchb-new
+      Bucket: !Ref BucketName
       PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Sid": "1", "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}" }, "Action": "s3:GetObject", "Resource": "${MitchB.Arn}/*" }, { "Sid": "2", "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}" }, "Action": "s3:ListBucket", "Resource": "${MitchB.Arn}" } ] }'
 # Create CloudFront Distribution
   PublicDistribution:
@@ -93,7 +96,7 @@ Resources:
         Aliases:
           - 'www.mitchbounds.com'
         Origins:
-          - DomainName: !Sub 'mitchb-new.s3.${AWS::Region}.amazonaws.com'
+          - DomainName: !Sub '{BucketName}.s3.${AWS::Region}.amazonaws.com'
             Id: S3-private-bucket
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginIdentity}'
