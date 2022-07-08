@@ -29,3 +29,4 @@ jobs:
 # sam deploy
       - run: sudo apt-get install -y gawk
       - run: export API_URL=$(sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} | awk '/Value/{print $2}')
+      - run: curl $API_URL
