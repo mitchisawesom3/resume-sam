@@ -75,7 +75,7 @@ Resources:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: mitchb-new
-      PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}" }, "Action": "s3:GetObject", "Resource": "${MitchB.Arn}/*" } ] }'
+      PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Sid": "1", "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}" }, "Action": "s3:GetObject", "Resource": "${MitchB.Arn}/*" }, { "Sid": "2", "Effect": "Allow", "Principal": { "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}" }, "Action": "s3:ListBucket", "Resource": "${MitchB.Arn}" } ] }'
 # Create CloudFront Distribution
   PublicDistribution:
     Type: AWS::CloudFront::Distribution
@@ -91,6 +91,7 @@ Resources:
         Enabled: 'true'
         Comment: mitchbounds.com
         HttpVersion: http2
+        DefaultRootObject: index.html
         DefaultCacheBehavior:
           AllowedMethods:
             - GET
@@ -130,7 +131,7 @@ Resources:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub /credentials/${ResumeSiteUser}
-      SecretString: !Sub '{"ACCESS_KEY":"${ResumeSiteUserKey}","SECRET_KEY":"${ResumeSiteUserKey.SecretAccessKey}"}'
+      SecretString: !Sub '{"AWS_KEY_ID":"${ResumeSiteUserKey}","AWS_SECRET_ACCESS_KEY":"${ResumeSiteUserKey.SecretAccessKey}"}'
 # Output random data after completion
 Outputs:
   visitorCountAPI:
