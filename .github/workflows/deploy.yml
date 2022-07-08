@@ -22,5 +22,5 @@ jobs:
 # Run Unit tests
 
 # sam deploy
-      - run: sudo apt-get install -y awk
+      - run: sudo apt-get install -y gawk
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} | awk '/Value/{print $2}'
