@@ -148,7 +148,7 @@ Resources:
       SecretString: !Sub '{"AWS_KEY_ID":"${ResumeSiteUserKey}","AWS_SECRET_ACCESS_KEY":"${ResumeSiteUserKey.SecretAccessKey}"}'
 # Create user to invalidate CloudFront cache
   CacheInvalidateUser:
-    Type: AWS::IAM::user
+    Type: AWS::IAM::User
     Properties:
       Policies:
         - PolicyName: CloudFront Invalidate Access
