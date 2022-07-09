@@ -38,6 +38,8 @@ jobs:
       - name: Create S3 Bucket
         if: ${{ env.BUCKET_CHECK }}
         run: aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKET }} ; gh secret set INITIAL_SETUP --body "complete"
+        env:
+          GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
       - name: Build sam template
         run: sam build  
