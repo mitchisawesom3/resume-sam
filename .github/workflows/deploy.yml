@@ -13,34 +13,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Install Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
       - name: Install nodejs 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - name: Setup sam cli
         uses: aws-actions/setup-sam@v1
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      - name: Create S3 Bucket
+        if: ${{ secrets.INITIAL_SETUP == '' }}
+        run: aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKET }} ; gh secret add INITIAL_SETUP --body "complete"
+
       - name: Build sam template
         run: sam build  
+
       - name: Deploy sam template
         run: |
           echo "OUTPUT<<EOF" >> $GITHUB_ENV
           sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} --parameter-overrides BucketName=${{ secrets.SITE_BUCKET }} >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV ; echo $GITHUB_ENV
+
       - name: Store API URL in variable for testing
         run: echo "API_URL=$(echo "${{ env.OUTPUT }}" | awk '/Value/{print $2}')" >> $GITHUB_ENV
+
       - name: Run curl on API URL
         if: ${{ env.API_URL }} != ''
         run: curl $API_URL
+
       - name: Store API URL in outputs
         id: API
         run: echo "::set-output name=API::${{ env.API }}"
