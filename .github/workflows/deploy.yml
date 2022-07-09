@@ -40,7 +40,7 @@ jobs:
         run: echo "API_URL=$(echo ${{ env.OUTPUT }} | awk '/Value/{print $2}')" >> $GITHUB_ENV
       - name: Run curl on API URL
         if: ${{ env.API_URL }} != ''
-        run: curl $API_URL
+        run: curl ${{ env.$API_URL }}
       - name: Store API URL in outputs
         id: API
-        run: echo "::set-output name=API::$(echo $API_URL)"
+        run: echo "::set-output name=API::${{ env.API }}"
