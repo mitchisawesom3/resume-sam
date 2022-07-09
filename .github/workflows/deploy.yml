@@ -34,7 +34,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Create S3 Bucket
-        if: ${{ secrets.INITIAL_SETUP == '' }}
+        if: ${{ (secrets.INITIAL_SETUP == '') }}
         run: aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKET }} ; gh secret add INITIAL_SETUP --body "complete"
 
       - name: Build sam template
