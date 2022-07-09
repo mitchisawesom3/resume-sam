@@ -11,7 +11,7 @@ jobs:
     outputs:
       API: ${{ steps.samdeploy.outputs.API }}
     env:
-      BUCKET_CHECK: ${{ secrets.AWS_BUCKET == '' }}
+      BUCKET_CHECK: ${{ secrets.INITIAL_SETUP == '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -37,7 +37,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Create S3 Bucket
         if: ${{ env.BUCKET_CHECK }}
-        run: aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKET }} ; gh secret add INITIAL_SETUP --body "complete"
+        run: aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKET }} ; gh secret set INITIAL_SETUP --body "complete"
 
       - name: Build sam template
         run: sam build  
