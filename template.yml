@@ -146,6 +146,25 @@ Resources:
     Properties:
       Name: !Sub /credentials/${ResumeSiteUser}
       SecretString: !Sub '{"AWS_KEY_ID":"${ResumeSiteUserKey}","AWS_SECRET_ACCESS_KEY":"${ResumeSiteUserKey.SecretAccessKey}"}'
+# Create user to invalidate CloudFront cache
+  CacheInvalidateUser:
+    Type: AWS::IAM::user
+    Properties:
+      Policies:
+        - PolicyName: CloudFront Invalidate Access
+          PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "cloudfront:GetDistribution","cloudfront:ListInvalidations","cloudfront:GetInvalidation","cloudfront:CreateInvalidation" ], "Resource": "${PublicDistribution.Arn}" } ] }'
+# Create access keys for GitHub actions
+  CacheInvalidateUserKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref CacheInvalidateUser
+# Create secret to store access keys and keep them secure
+  CacheInvalidateUserCredStorage:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub /credentials/${CacheInvalidateUser}
+      SecretString: !Sub '{"CF_KEY":"${CacheInvalidateUserKey}","CF_SECRET_ACCESS_KEY":"${CacheInvalidateUserKey.SecretAccessKey}"}'
+  
 # Output random data after completion
 Outputs:
   visitorCountAPI:
