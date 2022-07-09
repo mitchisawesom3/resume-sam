@@ -163,7 +163,7 @@ Resources:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub /credentials/${CacheInvalidateUser}
-      SecretString: !Sub '{"CF_KEY":"${CacheInvalidateUserKey}","CF_SECRET_ACCESS_KEY":"${CacheInvalidateUserKey.SecretAccessKey}"}'
+      SecretString: !Sub '{"CF_KEY":"${CacheInvalidateUserKey}","CF_SECRET_ACCESS_KEY":"${CacheInvalidateUserKey.SecretAccessKey}","CF_DISTRIBUTION":"${CloudFrontOriginIdentity}"}'
   
 # Output random data after completion
 Outputs:
