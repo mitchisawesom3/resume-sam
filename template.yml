@@ -151,8 +151,8 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       Policies:
-        - PolicyName: CloudFrontInvalidateAccess
-          PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "cloudfront:GetDistribution","cloudfront:ListInvalidations","cloudfront:GetInvalidation","cloudfront:CreateInvalidation" ], "Resource": "arn:aws:cloudfront::${AWS::AccountId}:distribution/${PublicDistribution}" } ] }'
+        - PolicyName: CloudFrontInvalidateCache
+          PolicyDocument: !Sub '{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "cloudfront:GetDistribution","cloudfront:ListInvalidations","cloudfront:GetInvalidation","cloudfront:CreateInvalidation" ], "Resource": [ "arn:aws:cloudfront::${AWS::AccountId}:distribution/${PublicDistribution}","arn:aws:cloudfront::${AWS::AccountId}:distribution/${PublicDistribution}/*" ] } ] }'
 # Create access keys for GitHub actions
   CacheInvalidateUserKey:
     Type: AWS::IAM::AccessKey
