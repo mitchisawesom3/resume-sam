@@ -110,7 +110,7 @@ jobs:
         if: ${{ env.API_CHECK == 'true' }}
         run: |
           perl -pei 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}/g' ./public/index.js
-          git config --global user.name "github-actions"
+          git config --global user.name "mitchisawesom3"
           git config --global user.email "mitch@mitchbounds.com"
           git push 
           
