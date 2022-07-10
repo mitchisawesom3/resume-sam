@@ -36,7 +36,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Create S3 Bucket
-        if: ${{ env.BUCKET_CHECK }}
+        if: ${{ env.BUCKET_CHECK == 'true' }}
         run: aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKET }} ; gh secret set INITIAL_SETUP --body "complete"
         env:
           GITHUB_TOKEN: ${{ secrets.OAUTH }}
@@ -53,9 +53,9 @@ jobs:
       - name: Store API URL in variable for testing
         run: echo "API_URL=$(echo "${{ env.OUTPUT }}" | awk '/Value/{print $2}')" >> $GITHUB_ENV
 
-      - name: Run curl on API URL
-        if: ${{ env.API_URL != '' }}
-        run: curl $API_URL
+#      - name: Run curl on API URL
+#        if: ${{ env.API_URL != '' }}
+#        run: curl $API_URL
 
       - name: Store API URL in outputs
         id: API
