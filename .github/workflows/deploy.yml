@@ -48,7 +48,7 @@ jobs:
         run: |
           echo "OUTPUT<<EOF" >> $GITHUB_ENV
           sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ secrets.AWS_STACK_NAME }} --s3-bucket ${{ secrets.AWS_BUCKET }} --capabilities CAPABILITY_IAM --region ${{ secrets.AWS_REGION }} --parameter-overrides BucketName=${{ secrets.SITE_BUCKET }} >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV ; echo $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Store API URL in variable for testing
         run: echo "API_URL=$(echo "${{ env.OUTPUT }}" | awk '/Value/{print $2}')" >> $GITHUB_ENV
@@ -74,7 +74,10 @@ jobs:
           repository: mitchisawesom3/resume-site
 
       - name: List secrets test
-        run: OUTPUT=$(gh secret list | egrep "AWS_BUCKET|AWS_KEY_ID_AWS_SECRET_ACCESS_KEY|CF_DISTRIBUTION|CF_KEY_ID|CF_SECRET_ACCESS_KEY"); echo 'OUTPUT="$OUTPUT"' >> $GITHUB_ENV
+        run: |
+          echo "SECRETS_CHECK<<EOF" >> $GITHUB_ENV
+          gh secret list | egrep "AWS_BUCKET|AWS_KEY_ID_AWS_SECRET_ACCESS_KEY|CF_DISTRIBUTION|CF_KEY_ID|CF_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
@@ -93,6 +96,9 @@ jobs:
           secrets: /
           parse-json: true
 
+      - name: Create secrets in resume-site repo
+        if: ${{ env.OUTPUT != '' }}
+        run: for key in AWS_KEY_ID AWS_SECRET_ACCESS_KEY CF_KEY_ID CF_SECRET_ACCESS_KEY CF_DISTRIBUTION AWS_BUCKET ; do echo "gh secret set $key --body \"${{ env.__$key }}\"" ; done
 #      - name: Create Secrets for repo access to AWS
 #        if: ${{ env.SECRETS_CHECK == 'true' }}
 #        run: gh secret set AWS_KEY_ID --body "${{ env.__AWS_KEY_ID }}"; gh secret set AWS_SECRET_ACCESS_KEY --body "${{ env.__AWS_SECRET_ACCESS_KEY }}"
