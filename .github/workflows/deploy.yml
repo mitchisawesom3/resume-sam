@@ -107,7 +107,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
       - name: Update API URL and push changes
-        if: ${{ env.API_CHECK != 'true' }}
+        if: ${{ env.API_CHECK == 'true' }}
         run: |
           perl -pe 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}/g' ./public/index.js
           git config --global user.name "github-actions"
