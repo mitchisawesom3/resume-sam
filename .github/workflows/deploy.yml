@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
-      newapi: ${{ steps.deploy.outputs.api }}
+      newapi: ${{ steps.api.outputs.api }}
     env:
       BUCKET_CHECK: ${{ secrets.INITIAL_SETUP == '' }}
     steps:

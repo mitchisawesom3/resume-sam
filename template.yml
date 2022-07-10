@@ -66,7 +66,7 @@ Resources:
   visitorCountAPI:
     Type: AWS::Serverless::Api
     Properties:
-      Name: Visitor Count API-4
+      Name: Visitor Count API-5
       StageName: dev
       Cors: 
         AllowOrigin: "'https://www.mitchbounds.com'"
