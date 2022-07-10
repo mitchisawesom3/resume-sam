@@ -109,8 +109,8 @@ jobs:
       - name: Update API URL and push changes
         if: ${{ env.API_CHECK == 'true' }}
         run: |
-          perl -pe 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}/g' ./public/index.js
+          perl -pei 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}/g' ./public/index.js
           git config --global user.name "github-actions"
           git config --global user.email "mitch@mitchbounds.com"
-          ls -lah
+          git push 
           
