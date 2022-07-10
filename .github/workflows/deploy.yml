@@ -70,6 +70,7 @@ jobs:
         uses: actions/checkout@v3
         with: 
           repository: mitchisawesom3/resume-site
+          token: ${{ secrets.DEPLOY_TOKEN }}
 
       - name: List secrets test
         run: |
@@ -116,6 +117,8 @@ jobs:
           git commit -m "Update new API URL"
           echo "${{ secrets.DEPLOY_KEY }}" > ../deploykey
           GIT_SSH_COMMAND="ssh -i ../deploykey" git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
 
       - name: Push to resume-site repsoitory
         uses: cpina/github-action-push-to-another-repository@main
