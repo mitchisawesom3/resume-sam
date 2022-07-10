@@ -98,21 +98,12 @@ jobs:
 
       - name: Create secrets in resume-site repo
         if: ${{ env.OUTPUT != '' }}
-        run: for key in AWS_KEY_ID AWS_SECRET_ACCESS_KEY CF_KEY_ID CF_SECRET_ACCESS_KEY CF_DISTRIBUTION AWS_BUCKET ; do echo "gh secret set $key --body \"${{ env.__$key }}\"" ; done
-#      - name: Create Secrets for repo access to AWS
-#        if: ${{ env.SECRETS_CHECK == 'true' }}
-#        run: gh secret set AWS_KEY_ID --body "${{ env.__AWS_KEY_ID }}"; gh secret set AWS_SECRET_ACCESS_KEY --body "${{ env.__AWS_SECRET_ACCESS_KEY }}"
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.PAT }}
-
-#      - name: Create Secrets for CF invalidation access
-#        if: ${{ env.CF_SECRETS_CHECK == 'true' }}
-#        run: gh secret set CF_KEY_ID --body "${{ env.__CF_KEY_ID }}"; gh secret set CF_SECRET_ACCESS_KEY --body "${{ env.__CF_SECRET_ACCESS_KEY }}"; gh secret set CF_DISTRIBUTION --body "${{ env.__CF_DISTRIBUTION }}"
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.PAT }}
-
-#      - name: Create Secret for Bucket name
-#        if: ${{ env.BUCKET_SECRET_CHECK == 'true' }}
-#        run: gh secret set AWS_BUCKET --body "${{ env.__AWS_BUCKET }}"
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          gh secret set AWS_KEY_ID --body "${{ env.__AWS_KEY_ID }}"
+          gh secret set AWS_SECRET_ACCESS_KEY --body "${{ env.__AWS_SECRET_ACCESS_KEY }}"
+          gh secret set CF_KEY_ID --body "${{ env.__CF_KEY_ID }}"
+          gh secret set CF_SECRET_ACCESS_KEY --body "${{ env.__CF_SECRET_ACCESS_KEY }}"
+          gh secret set CF_DISTRIBUTION --body "${{ env.__CF_DISTRIBUTION }}"
+          gh secret set AWS_BUCKET --body "${{ env.__AWS_BUCKET }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
