@@ -51,7 +51,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Store API URL in variable for testing
-        run: echo "API_URL=$(echo "${{ env.OUTPUT }}" | awk '/Value/{print $2}')" >> $GITHUB_ENV
+        run: echo "API_URL="${{ env.OUTPUT }}" | awk '/Value/{print $2}')" >> $GITHUB_ENV
 
 #      - name: Run curl on API URL
 #        if: ${{ env.API_URL != '' }}

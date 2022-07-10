@@ -145,7 +145,7 @@ Resources:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: /
-      SecretString: !Sub '{"AWS_KEY_ID":"${ResumeSiteUserKey}","AWS_SECRET_ACCESS_KEY":"${ResumeSiteUserKey.SecretAccessKey}","CF_KEY_ID":"${CacheInvalidateUserKey}","CF_SECRET_ACCESS_KEY":"${CacheInvalidateUserKey.SecretAccessKey}","CF_DISTRIBUTION":"${PublicDistribution}","AWS_BUCKET":"${MitchB}","UPDATE_TEMPLATE":"2"}'
+      SecretString: !Sub '{"AWS_KEY_ID":"${ResumeSiteUserKey}","AWS_SECRET_ACCESS_KEY":"${ResumeSiteUserKey.SecretAccessKey}","CF_KEY_ID":"${CacheInvalidateUserKey}","CF_SECRET_ACCESS_KEY":"${CacheInvalidateUserKey.SecretAccessKey}","CF_DISTRIBUTION":"${PublicDistribution}","AWS_BUCKET":"${MitchB}","UPDATE_TEMPLATE":"3"}'
 # Create user to invalidate CloudFront cache
   CacheInvalidateUser:
     Type: AWS::IAM::User
