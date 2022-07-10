@@ -106,11 +106,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
-      - name: Update API URL and push changes
+      - name: Update API URL
         if: ${{ env.API_CHECK == 'true' }}
         run: |
           perl -pei 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}/g' ./public/index.js
           git config --global user.name "mitchisawesom3"
           git config --global user.email "mitch@mitchbounds.com"
-          git push 
-          
+
+      - name: Push to resume-site repsoitory
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          API_TOKEN_GITHUB: ${{ secrets.DEPLOY_TOKEN }}
+        with:
+          source-directory: './'
+          destination-github-username: 'mitchisawesom3'
+          destination-repository-name: 'resume-site'
+          user-email: 'mitch@mitchbounds.com'
+          target-branch: master
