@@ -73,8 +73,13 @@ jobs:
         with: 
           repository: mitchisawesom3/resume-site
 
+      - name: List secrets test
+        run: OUTPUT=$(gh secret list | egrep "AWS_BUCKET|AWS_KEY_ID_AWS_SECRET_ACCESS_KEY|CF_DISTRIBUTION|CF_KEY_ID|CF_SECRET_ACCESS_KEY"); echo "OUTPUT=$OUTPUT" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.OAUTH }}
+
       - name: Configure Initial AWS Credentials
-        if: ${{ (env.SECRETS_CHECK == 'true') || (env.CF_SECRETS_CHECK == 'true') || (env.BUCKET_SECRET_CHECK == 'true') }}
+        if: ${{ env.OUTPUT != '' }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
@@ -82,16 +87,11 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Read secrets into environment variables
-        if: ${{ (env.SECRETS_CHECK == 'true') || (env.CF_SECRETS_CHECK == 'true') || (env.BUCKET_SECRET_CHECK == 'true') }}
+        if: ${{ env.OUTPUT != '' }}
         uses: abhilash1in/aws-secrets-manager-action@v2.1.0
         with:
           secrets: /
           parse-json: true
-
-      - name: List secrets test
-        run: OUTPUT=$(gh secret list | egrep "AWS_BUCKET|AWS_KEY_ID_AWS_SECRET_ACCESS_KEY|CF_DISTRIBUTION|CF_KEY_ID|CF_SECRET_ACCESS_KEY"); echo $OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
 #      - name: Create Secrets for repo access to AWS
 #        if: ${{ env.SECRETS_CHECK == 'true' }}
