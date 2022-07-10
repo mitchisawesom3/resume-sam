@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
-      API: ${{ steps.samdeploy.outputs.API }}
+      API: ${{ steps.deploy.outputs.API }}
     env:
       BUCKET_CHECK: ${{ secrets.INITIAL_SETUP == '' }}
     steps:
@@ -59,13 +59,13 @@ jobs:
 
       - name: Store API URL in outputs
         id: API
-        run: echo "::set-output name=API::${{ env.API }}"
+        run: echo ::set-output name=API::${{ env.API }}
   configure-site-repo:
     runs-on: ubuntu-latest
     needs: deploy
     env:
-      API: ${{ steps.deploy.outputs.API }}
-      API_CHECK: ${{ steps.deploy.outputs.API != '' }}
+      API: ${{ needs.deploy.outputs.API }}
+      API_CHECK: ${{ needs.deploy.outputs.API != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -110,7 +110,7 @@ jobs:
       - name: Update API URL and push changes
         if: ${{ env.API_CHECK == 'true' }}
         run: |
-          sed 's/(?=https:\/\/)\w{1,10}/${{ steps.deploy.outputs.API }}/g' ./public/index.js
+          sed 's/(?=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.API }}/g' ./public/index.js
           git config --global user.name "github-actions"
           git config --global user.email "mitch@mitchbounds.com"
           
