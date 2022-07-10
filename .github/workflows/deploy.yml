@@ -57,8 +57,7 @@ jobs:
 #        if: ${{ env.API_URL != '' }}
 #        run: curl $API_URL
 
-      - name: Store API URL in outputs
-        id: api
+      - id: api
         run: echo "::set-output name=api::${{ env.API }}"
   configure-site-repo:
     runs-on: ubuntu-latest
@@ -110,7 +109,7 @@ jobs:
       - name: Update API URL and push changes
         if: ${{ env.API_CHECK != 'true' }}
         run: |
-          sed 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.API }}/g' ./public/index.js
+          perl -pe 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.API }}/g' ./public/index.js
           git config --global user.name "github-actions"
           git config --global user.email "mitch@mitchbounds.com"
           
