@@ -109,11 +109,13 @@ jobs:
       - name: Update API URL
         if: ${{ env.API_CHECK == 'true' }}
         run: |
-          perl -pe 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}/g' -i ./public/index.js
+          perl -pe 's/(?<=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.newapi }}1/g' -i ./public/index.js
           git config --global user.name "mitchisawesom3"
           git config --global user.email "mitch@mitchbounds.com"
           git add -A
           git commit -m "Update new API URL"
+          echo "${{ secrets.DEPLOY_KEY }}" > ../deploykey
+          GIT_SSH_COMMAND="ssh -i ../deploykey" git push
 
       - name: Push to resume-site repsoitory
         uses: cpina/github-action-push-to-another-repository@main
