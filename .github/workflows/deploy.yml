@@ -74,7 +74,7 @@ jobs:
           repository: mitchisawesom3/resume-site
 
       - name: List secrets test
-        run: OUTPUT=$(gh secret list | egrep "AWS_BUCKET|AWS_KEY_ID_AWS_SECRET_ACCESS_KEY|CF_DISTRIBUTION|CF_KEY_ID|CF_SECRET_ACCESS_KEY"); echo "OUTPUT=$OUTPUT" >> $GITHUB_ENV
+        run: OUTPUT=$(gh secret list | egrep "AWS_BUCKET|AWS_KEY_ID_AWS_SECRET_ACCESS_KEY|CF_DISTRIBUTION|CF_KEY_ID|CF_SECRET_ACCESS_KEY"); echo "OUTPUT=\"$OUTPUT\"" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
