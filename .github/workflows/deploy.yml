@@ -102,4 +102,4 @@ jobs:
           gh secret set CF_DISTRIBUTION --body "${{ env.__CF_DISTRIBUTION }}"
           gh secret set AWS_BUCKET --body "${{ env.__AWS_BUCKET }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.OAUTH }}
