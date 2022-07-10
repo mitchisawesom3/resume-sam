@@ -59,7 +59,7 @@ jobs:
 
       - name: Store API URL in outputs
         id: API
-        run: echo ::set-output name=API::${{ env.API }}
+        run: echo ::set-output name=API::"${{ env.API }}"
   configure-site-repo:
     runs-on: ubuntu-latest
     needs: deploy
