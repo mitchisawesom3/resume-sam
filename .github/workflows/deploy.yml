@@ -63,6 +63,8 @@ jobs:
   configure-site-repo:
     runs-on: ubuntu-latest
     needs: deploy
+    env:
+      API_CHECK: ${{ needs.deploy.outputs.API != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -105,7 +107,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.OAUTH }}
 
       - name: Update API URL and push changes
-        if: ${{ needs.deploy.outputs.API != '' }}
+        if: ${{ env.API_CHECK == 'true' }}
         run: |
           sed 's/(?=https:\/\/)\w{1,10}/${{ needs.deploy.outputs.API }}/g' ./public/index.js
           git config --global user.name "github-actions"
